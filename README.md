@@ -23,8 +23,8 @@ you prefer another language).
   * e.g. on Debian-based OS: `sudo apt install zenity xclip suckless-tools`
 * Save x-tip.py into a directory on your `$PATH` and `chmod +x x-tip.py`
 * Bind a hotkey to it using your preferred method. 
-  * I use [sxhkd](https://github.com/baskerville/sxhkd), but I think most
-  desktop environments have a hotkey binding system.
+  * I bound it to `super + right click` using [sxhkd](https://github.com/baskerville/sxhkd)
+  * I think most desktop environments have a hotkey binding system. If you get it working using something else it would be great if you could add documentation.
 * Optionally install dependencies for any individual commands that you want to use:
   * GoogleTranslate requires the python googtrans library
   * Emacsclient requires emacs (obviously)
