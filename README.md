@@ -1,8 +1,17 @@
 # X-tip
 
-A semi-clone of tanin47's [tip](https://github.com/tanin47/tip) but for X11 (i.e. Linux).
+A semi-clone of [tanin47's tip](https://github.com/tanin47/tip) but for X11 (i.e. Linux).
 
-Alpha stage, anything may change at any time.
+Quickly run auto-completed commands on selected text. For example:
+
+* Google translate some text
+* Convert a unix timestamp to ISO format
+* Open a path in your text editor
+* Google search some text
+
+In comparison to a browser extension this works from *any* program.
+
+Currently alpha: anything may change at any time.
 
 Customised in python (but it's very easy to run shell commands from python if
 you prefer another language).
