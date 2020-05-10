@@ -1,6 +1,6 @@
 # Xtip
 
-[![travis](https://travis-ci.org/davidshepherd7/tip.svg?branch=master)](https://travis-ci.org/davidshepherd7/tip)
+[![travis](https://travis-ci.org/davidshepherd7/xtip.svg?branch=master)](https://travis-ci.org/davidshepherd7/xtip)
 
 A semi-clone of [tanin47's tip](https://github.com/tanin47/tip) but for X11 (i.e. Linux).
 
