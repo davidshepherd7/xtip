@@ -1,5 +1,7 @@
 # Xtip
 
+[![travis](https://travis-ci.org/davidshepherd7/tip.svg?branch=master)](https://travis-ci.org/davidshepherd7/tip)
+
 A semi-clone of [tanin47's tip](https://github.com/tanin47/tip) but for X11 (i.e. Linux).
 
 Quickly run auto-completed commands on selected text. For example:
@@ -72,7 +74,6 @@ TODO: Do we need both inheritence and a decorator? Probably not!
 ## TODO
 
 * Write some tests
-* CI builds
 * Try to display useful outputs in dmenu completion (e.g. converted datetimes)
 * Something better than dmenu? Better mouse support, popup at cursor.
 * Figure out how to construct an absolute path from a relative one
