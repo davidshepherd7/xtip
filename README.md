@@ -12,8 +12,8 @@ you prefer another language).
 
 * Install the core dependencies: `zenity`, `dmenu`, `xclip`
   * e.g. on Debian-based OS: `sudo apt install zenity xclip suckless-tools`
-* Save x-tip.py into a directory on your `$PATH` and `chmod +x x-tip.py`
-* Bind a hotkey to it using your preferred method. 
+* Install xtip from pypi, e.g. `pip3 install xtip`
+* Bind a hotkey to run the `xtip` command using your preferred method.
   * I use [sxhkd](https://github.com/baskerville/sxhkd), but I think most
   desktop environments have a hotkey binding system.
 * Optionally install dependencies for any individual commands that you want to use:
@@ -25,19 +25,44 @@ you prefer another language).
 
 
 For most customisation of commands you should probably just write your own
-(because it only takes a few lines of python).
+(because it only takes a few lines of python). You can write new commands in
+`~/.config/xtip/custom_commands.py`.
 
-To do so: write a new class derived from `Command` and decorate it with `@command`.
+To do so: write a new class derived from `Command` and decorate it with
+`@command`, for example:
 
-TODO: better docs?
+
+```
+from typing import Optional
+from subprocess import run
+
+from xtip.commands import Command, command
+
+
+@command
+class Emacsclient(Command):
+    unique_name = "Open in emacsclient"
+
+    def run(self, text: str) -> Optional[str]:
+        # TODO(david): Figure out a way to get the absolute path... maybe by
+        # guessing from a few possible prefixes?
+        run(["emacsclient", "-c", "-n", text])
+
+        # Return text from here to output it to the screen and clipboard
+        return None
+
+    def accepts(self, text: str) -> bool:
+        # TODO: only accept things that look like valid paths?
+        Return True
+```
+
+TODO: Do we need both inheritence and a decorator? Probably not!
 
 
 ## TODO
 
 * Write some tests
-* Set up typechecking properly
-* Add support for config files to specify commands
-* Add support for installing using `pip` (and break up into multiple files)
+* CI builds
 * Try to display useful outputs in dmenu completion (e.g. converted datetimes)
 * Something better than dmenu? Better mouse support, popup at cursor.
-* Figure out how to construct an absolute path from 
+* Figure out how to construct an absolute path from a relative one
