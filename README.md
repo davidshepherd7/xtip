@@ -1,4 +1,4 @@
-# X-tip
+# Xtip
 
 A semi-clone of tanin47's [tip](https://github.com/tanin47/tip) but for X11 (i.e. Linux).
 

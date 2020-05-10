@@ -1,10 +1,6 @@
-#! /usr/bin/env python3
-
-
-import sys
 from subprocess import check_output, check_call, run
 
-from typing import Optional
+from typing import Optional, List, Any
 
 
 class Quit(Exception):
@@ -40,14 +36,14 @@ class Command:
     def run(self, text: str) -> Optional[str]:
         pass
 
-    def accepts(self, text: str) -> str:
+    def accepts(self, text: str) -> bool:
         return True
 
 
-ALL_COMMANDS = []
+ALL_COMMANDS: List[Command] = []
 
 
-def command(c: Command):
+def command(c: Any) -> None:
     ALL_COMMANDS.append(c())
 
 
@@ -73,7 +69,7 @@ def pick_command(text: str) -> Command:
     return next(c for c in commands if c.unique_name == selected)
 
 
-def main(argv):
+def application(argv: List[str]) -> int:
 
     selection = sanitize(get_x_selection())
     print("Got selection:", selection)
@@ -114,7 +110,7 @@ class UnixTimestamp(Command):
         dt = datetime.utcfromtimestamp(int(text))
         return dt.strftime("%Y-%m-%d %H:%M:%S") + " UTC"
 
-    def accepts(self, text: str) -> str:
+    def accepts(self, text: str) -> bool:
         return text.isnumeric()
 
 
@@ -145,6 +141,7 @@ class GoogleSearch(Command):
 
         escaped = urllib.parse.quote(text)
         run(["sensible-browser", f"https://google.com/search?q={escaped}"])
+        return None
 
 
 @command
@@ -160,11 +157,3 @@ class Emacsclient(Command):
     def accepts(self, text: str) -> bool:
         # TODO: allow relative paths
         return text.startswith("/") or text.startswith("~")
-
-
-########################################
-
-
-# If this script is run from a shell then run main() and return the result.
-if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))

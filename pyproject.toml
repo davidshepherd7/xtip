@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "xtip"
+version = "0.1.0"
+description = "Run commands on selected text quickly"
+authors = ["David Shepherd <davidshepherd7@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/davidshepherd7/xtip"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.770"
+black = "^19.10b0"
+pytest = "^5.4.2"
+
+[tool.poetry.scripts]
+xtip = 'xtip:main'
+
+
+[tool.poetry.extras]
+
+google-translate = ["googtrans"]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
