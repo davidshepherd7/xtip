@@ -21,6 +21,8 @@ xtip = 'xtip:main'
 
 [tool.poetry.extras]
 
+# TODO: should I add some gtk things here? I've just been using the system libs.
+
 google-translate = ["googtrans"]
 
 [build-system]

@@ -3,13 +3,16 @@ import importlib.util
 from typing import Optional, List, Any
 import os.path
 
+from xtip.ui import Ui, UnixToolsUi
+from xtip.exceptions import Quit
+
 # Load the commands
 import xtip.commands
 from xtip.commands import Command, ALL_COMMANDS
 
 
-class Quit(Exception):
-    pass
+# TODO: could probably eliminate xclip dependency in Gtk UI by using Gtk
+# clipboard. Maybe we could even do it with a pure python library?
 
 
 def _get_x_selection() -> str:
@@ -26,14 +29,7 @@ def _sanitize(text: str) -> str:
     return text.strip().replace("\n", " ").replace("\t", " ")
 
 
-def _display(text: str) -> None:
-    # TODO: log stderr?
-    check_call(
-        ["zenity", "--info", "--width", "600", "--height", "400", "--text", text]
-    )
-
-
-def _pick_command(text: str) -> Command:
+def _pick_command(ui: Ui, text: str) -> Command:
     commands = [c for c in ALL_COMMANDS if c.accepts(text)]
 
     if len(commands) == 0:
@@ -42,16 +38,7 @@ def _pick_command(text: str) -> Command:
     if len(commands) == 1:
         return commands[0]
 
-    names = "\n".join(c.unique_name for c in commands).encode("utf-8")
-    try:
-        dmenu_result = check_output(
-            ["dmenu", "-p", "select command: ", "-i"], input=names
-        )
-    except Exception:
-        print("Dmenu failed which normally means the user hit escape, quitting")
-        raise Quit()
-
-    selected = dmenu_result.strip().decode("utf-8")
+    selected = ui.display_menu([c.unique_name for c in commands])
     return next(c for c in commands if c.unique_name == selected)
 
 
@@ -68,24 +55,38 @@ def application(argv: List[str]) -> int:
     config_path = os.path.expanduser("~/.config/xtip/custom_commands.py")
     _load_user_commands(config_path)
 
+    ui_type = "unix"
+    # ui_type = "gtk"
+
+    ui: Ui
+    if ui_type == "unix":
+        ui = UnixToolsUi()
+    elif ui_type == "gtk":
+        from xtip.ui_gtk import GtkUi
+
+        ui = GtkUi()
+
     selection = _sanitize(_get_x_selection())
-    print("Got selection:", selection)
+    print("Got X11 selection:", selection)
 
     try:
-        command = _pick_command(selection)
-        print("Running command:", command.unique_name)
-        result = command.run(selection)
-        print("Finished sucessfully")
+        command = _pick_command(ui, selection)
     except Quit:
+        print("User quit")
         return 0
+
+    try:
+        print(f"Running command: {command.unique_name}")
+        result = command.run(selection)
+        print(f"Command {command.unique_name} finished sucessfully")
     except Exception as e:
-        _display("Command failed: " + str(e))
+        ui.display_result(f"Command {command.unique_name} failed with error: " + str(e))
         raise
 
     if result is not None:
         print("Result was:", result)
-        _set_x_selection(result)
-        _display(result + "\n\nResult copied to X selection.")
+        _set_clipboard(result)
+        ui.display_result(result)
     else:
         print("No result")
 

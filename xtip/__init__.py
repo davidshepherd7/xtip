@@ -1,7 +1,8 @@
 
 import sys
 
-from xtip.xtip import application, Quit
+from xtip.xtip import application
+from xtip.exceptions import Quit
 
 
 def main() -> int:
