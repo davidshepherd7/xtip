@@ -21,8 +21,8 @@ def _get_x_selection() -> str:
     return output.decode("utf-8")
 
 
-def _set_x_selection(text: str) -> None:
-    run(["xclip", "-i"], input=text.encode("utf-8"))
+def _set_clipboard(text: str) -> None:
+    run(["xclip", "-i", "-selection", "clipboard"], input=text.encode("utf-8"))
 
 
 def _sanitize(text: str) -> str:
